@@ -15,8 +15,9 @@ class NaiveParserTest extends FunSuite {
   test("Should parse the given tokens into Scala Types"){
 
     val tokens = List("(", "define", "area", "(", "lambda", "(", "r", ")", "(", "*", "3.141592653", "(", "*", "r", "r", ")", ")", ")", ")")
-    val (result, _) = NaiveParser.parse(List(), tokens)
-    val expectedResult = List(List("define", "area", List("lambda", List("r"), List("*", "3.141592653", List("*", "r", "r"))))).asInstanceOf[List[Any]]
-    assert(result == expectedResult)
+    val (result::t , _) = NaiveParser.parse(List(), tokens)
+    val expectedResult = List("define", "area", List("lambda", List("r"), List("*", "3.141592653", List("*", "r", "r")))).asInstanceOf[List[Any]]
+    val transformedResult: List[Any] = result.asInstanceOf[List[Any]]
+    assert(transformedResult == expectedResult)
   }
 }
