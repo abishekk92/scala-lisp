@@ -6,13 +6,13 @@ import scala.util.parsing.combinator._
 
 
 object Parser extends JavaTokenParsers{
-  val value : Parser[Any] = stringLiteral ^^ (a => a) | floatingPointNumber ^^ (BigDecimal(_))
+  val value : Parser[Value] = stringLiteral ^^ (a => Name(a)) | floatingPointNumber ^^ (a => Number(BigDecimal(a)))
 
-  val expression: Parser[Any] = value ^^ (a => a) | """[^()\s]+""".r ^^ (a => a) | function
+  val expression: Parser[Expression] = value ^^ (a => valueExpression(a)) | """[^()\s]+""".r ^^ (a => Symbol(a)) | combinator
 
-  val function: Parser[List[Any]] = "(" ~> rep(expression) <~ ")" ^^ (a => a)
+  val combinator: Parser[Combinator] = "(" ~> rep(expression) <~ ")" ^^ (a => Combinator(a))
 
-  val program: Parser[List[Any]] = rep(expression)
+  val program: Parser[List[Expression]] = rep(expression)
 
   def parse(expressions : String) = parseAll(program, expressions).get.head
 

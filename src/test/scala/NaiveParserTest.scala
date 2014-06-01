@@ -16,8 +16,10 @@ class NaiveParserTest extends FunSuite {
 
     val tokens = List("(", "define", "area", "(", "lambda", "(", "r", ")", "(", "*", "3.141592653", "(", "*", "r", "r", ")", ")", ")", ")")
     val (result::t , _) = NaiveParser.parse(List(), tokens)
-    val expectedResult = List("define", "area", List("lambda", List("r"), List("*", "3.141592653", List("*", "r", "r")))).asInstanceOf[List[Any]]
-    val transformedResult: List[Any] = result.asInstanceOf[List[Any]]
-    assert(transformedResult == expectedResult)
+    val expectedResult = Combinator(List(Symbol("define"), Symbol("area"),
+                                    Combinator(List(Symbol("lambda"), Combinator(List(Symbol("r"))),
+                                    Combinator(List(Symbol("*"), valueExpression(Number(3.141592653)),
+                                    Combinator(List(Symbol("*"), Symbol("r"), Symbol("r")))))))))
+    assert(result === expectedResult)
   }
 }

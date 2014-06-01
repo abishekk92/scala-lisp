@@ -7,9 +7,10 @@ class ParserTest extends FunSuite {
 
   test("Should parse"){
     val expr : String = "(define area (lambda (r) (* 3.141592653 (* r r))))"
-    val result = Parser.parse(expr).asInstanceOf[List[Any]]
-    val expectedResult= List("define", "area", List("lambda", List("r"), List("*", 3.141592653, List("*", "r", "r"))))
-    assert(result.length == expectedResult.length)
+    val result = Parser.parse(expr)
+    val expectedResult= Combinator(List(Symbol("define"), Symbol("area"), Combinator(List(Symbol("lambda"), Combinator(List(Symbol("r"))), Combinator(List(Symbol("*"), valueExpression(Number(3.141592653)), Combinator(List(Symbol("*"), Symbol("r"), Symbol("r")))))))))
+    assert(result == expectedResult)
+
   }
 
 }
